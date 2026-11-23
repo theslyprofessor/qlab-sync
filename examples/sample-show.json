@@ -1,0 +1,35 @@
+{
+  "eventSlug": "example-concert-2026",
+  "workspaceHint": "Example_Concert",
+  "playbackCueToOrder": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "4a": 4,
+    "4b": 4,
+    "5": 5,
+    "L6": 10
+  },
+  "memoTransitions": [
+    { "from": "INT", "to": "P2", "order": 6 },
+    { "from": "INT", "to": "L1", "order": 6 },
+    { "from": "L1", "to": "L2", "order": 7 },
+    { "from": "L2", "to": "L4", "order": 8 },
+    { "from": "L4", "to": "L6W", "order": 9 },
+    { "from": "L4", "to": "L6", "order": 9 }
+  ],
+  "nonProgramCues": ["PRE", "P1", "1W", "6W", "P2", "L6W", "END"],
+  "orderTitles": {
+    "1": "Opening Piece",
+    "2": "Electroacoustic Study",
+    "3": "Audio-Visual Piece",
+    "4": "Synced Group Piece (Visuals + Master Audio)",
+    "5": "Closing Fixed Media",
+    "6": "Intermission",
+    "7": "Live Ensemble 1",
+    "8": "Live Ensemble 2",
+    "9": "Live Ensemble 3",
+    "10": "Finale (Live Vocals + Backing Track)"
+  }
+}

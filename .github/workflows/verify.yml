@@ -1,0 +1,48 @@
+name: Cross-Platform Safety & Formal Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  cross-platform-tests:
+    name: Safety Audit & Tests (${{ matrix.os }} / Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run exhaustive BFS formal verifier
+        run: python qlab_sync.py --verify --config examples/sample-show.json
+      - name: Run read-only AST audit, boundary tests, and mock QLab integration tests
+        run: python -m unittest discover -s tests -v
+
+  tla-plus-model-check:
+    name: TLA+ TLC Formal Model Check (spec/QlabSync.tla)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Download official TLA+ tools (tla2tools.jar)
+        run: |
+          curl -fsSL -o tla2tools.jar \
+            https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+      - name: Run TLC exhaustive model checker on spec/QlabSync.tla
+        run: |
+          java -XX:+UseParallelGC -cp tla2tools.jar tlc2.TLC \
+            -workers auto \
+            -deadlock \
+            -config spec/QlabSync.cfg \
+            spec/QlabSync.tla
